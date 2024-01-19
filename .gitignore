@@ -1,2 +1,3 @@
 .venv
 atp-data/
+db.sqlite3
