@@ -1,7 +1,9 @@
 from django import forms
 
+from .models import LoaderModel
 
-class LoaderForm(forms.Form):
-    matches = forms.FileField(label='Archivo de partidos')
-    players = forms.FileField(label='Archivo de jugadores')
-    stats = forms.FileField(label='Archivo de datos')
+
+class LoaderForm(forms.ModelForm):
+    class Meta:
+        model = LoaderModel
+        fields = ['matches', 'players', 'stats']
