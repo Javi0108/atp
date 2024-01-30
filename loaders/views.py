@@ -33,7 +33,7 @@ def get_datos(request):
                                 name=row[1],
                                 hand=row[2],
                                 country=row[3],
-                                birthdate=[4],
+                                birthdate=row[4],
                             )
                         elif files == 'matches':
                             Match.objects.create(
@@ -41,13 +41,13 @@ def get_datos(request):
                                 tournament=row[1],
                                 date=row[2],
                                 round=row[3],
-                                duration=[4],
+                                duration=row[4],
                             )
                         elif files == 'stats':
                             Stats.objects.create(
                                 match_id=row[0],
-                                player_id=[1],
-                                winner=[2],
+                                player_id=row[1],
+                                winner=row[2],
                             )
 
                 return JsonResponse({'status': 'ok'})
