@@ -6,4 +6,4 @@ from .models import LoaderModel
 class LoaderForm(forms.ModelForm):
     class Meta:
         model = LoaderModel
-        fields = ['matches', 'players', 'stats']
+        fields = ['players', 'matches', 'stats']
