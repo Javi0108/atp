@@ -44,7 +44,7 @@ def get_datos(request):
                             winner = Player.objects.get(name=row[5])
                             loser = Player.objects.get(name=row[6])
 
-                            # Crea los objetos Stats y guarda la relación con el partido y los jugadores
+                            # Crea los objetos Stats y guarda la relación con partido y jugadores.
                             winner_stats = Stats(match_id=match, player_id=winner, winner=True)
                             winner_stats.save()
 
