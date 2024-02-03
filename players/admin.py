@@ -5,4 +5,4 @@ from .models import Player
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ['name', 'hand', 'country', 'birthdate']
+    list_display = ['player_id', 'name', 'hand', 'country', 'birthdate']

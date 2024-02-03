@@ -5,4 +5,4 @@ from .models import Match
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ['tournament', 'date', 'round', 'duration', 'winner', 'loser']
+    list_display = ['match_id', 'tournament', 'date', 'round', 'duration', 'winner', 'loser']

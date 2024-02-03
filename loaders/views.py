@@ -24,6 +24,7 @@ def get_datos(request):
                     for row in csvreader:
                         if file.name == 'players.csv':
                             player = Player()
+                            player.player_id = row[0]
                             player.name = row[1]
                             player.hand = row[2]
                             player.country = row[3]
@@ -32,18 +33,30 @@ def get_datos(request):
 
                         elif file.name == 'matches.csv':
                             match = Match()
+                            match.match_id = row[0]
                             match.tournament = row[1]
                             match.date = datetime.strptime(row[2], '%Y-%m-%d')
                             match.round = row[3]
                             match.duration = row[4]
-                            match.save()
 
-                            # Falta hacer que los campos winner y loser se puedan insertar en la tabla matches
+                            # Get the winner and loser from stats.csv
+                            stats_file = open('stats.csv', 'r')
+                            next(stats_file)
+                            stats_csvreader = csv.reader(stats_file)
+                            for stats_row in stats_csvreader:
+                                print('VALORES: \n', stats_row)
+                                if stats_row[2] == 'TRUE':
+                                    match.winner = Player.objects.get(player_id=stats_row[1])
+                                elif stats_row[2 == 'FALSE']:
+                                    match.loser = Player.objects.get(
+                                        player_id=stats_row[1]
+                                    )  # No va por culpa de la iteracion
+                                match.save()
 
-                        elif file.name == 'stats.csv':
-                            match_id = row[0]
-                            player_id = row[1]
-                            winner = bool(row[2])
+                            stats_file.close()
+
+                            # Falta hacer que los campos winner y loser se puedan insertar en la Stats.objects.get(win_matches=True)
+
             return JsonResponse({'status': 'ok'})
     else:
         form = LoaderForm()

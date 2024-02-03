@@ -4,6 +4,7 @@ from players.models import Player
 
 
 class Match(models.Model):
+    match_id = models.CharField(max_length=10)
     tournament = models.CharField(max_length=250)
     date = models.DateTimeField(blank=True, null=True)
     round = models.CharField(max_length=250)
@@ -13,3 +14,9 @@ class Match(models.Model):
 
     def __str__(self):
         return self.tournament
+
+
+# class Stats(models.Model):
+#     match_id = models.ForeignKey(Match, on_delete=models.CASCADE)
+#     player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
+#     winner = models.BooleanField()
