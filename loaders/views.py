@@ -42,6 +42,8 @@ def get_datos(request):
                                 date=row[2],
                                 round=row[3],
                                 duration=[4],
+                                winner=[5],
+                                loser=[6],
                             )
                         elif files == 'stats':
                             stats_rows.append(row)
