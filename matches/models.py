@@ -13,3 +13,9 @@ class Match(models.Model):
 
     def __str__(self):
         return self.tournament
+
+
+class Stats(models.Model):
+    match_id = models.ForeignKey(Match, on_delete=models.CASCADE)
+    player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
+    winner = models.BooleanField()

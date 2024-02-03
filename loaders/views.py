@@ -1,60 +1,66 @@
 import csv
+from datetime import datetime
 
-# from django.http import JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 
-from matches.models import Match
+from matches.models import Match, Stats
 from players.models import Player
 
 from .forms import LoaderForm
 
 
-@csrf_protect
+@csrf_exempt
 def get_datos(request):
     if request.method == 'POST':
         form = LoaderForm(request.POST, request.FILES)
         if form.is_valid():
-            # Aquí puedes realizar el procesamiento del archivo CSV
-            # lista_archivos = [request.FILES]
-            # players_rows = []
-            # matches_rows = []
-            stats_rows = []
-
             for files in request.FILES:
-                print(files)
+                print(request.FILES)
                 with open('atp-data/' + files + '.csv', 'r') as file:
                     csvreader = csv.reader(file)
-                    # header = next(csvreader)
+                    header = next(csvreader)
+                    print(header)
                     for row in csvreader:
                         if files == 'players':
-                            Player.objects.get_or_create(
-                                player_id=row[0],
-                                name=row[1],
-                                hand=row[2],
-                                country=row[3],
-                                birthdate=[4],
-                            )
+                            # for row in csvreader:
+                            player = Player()
+                            player.name = row[1]
+                            player.hand = row[2]
+                            player.country = row[3]
+                            player.birthdate = datetime.strptime(row[4], '%Y-%m-%d').date()
+                            player.save()
+
                         elif files == 'matches':
-                            Match.objects.get_or_create(
-                                match_id=row[0],
-                                tournament=row[1],
-                                date=row[2],
-                                round=row[3],
-                                duration=[4],
-                                winner=[5],
-                                loser=[6],
-                            )
+                            # for row in csvreader:
+                            match = Match()
+                            match.tournament = row[1]
+                            match.date = datetime.strptime(row[2], '%Y-%m-%d').date()
+                            match.round = row[3]
+                            match.duration = int(row[4])
+
+                            # Obtén los jugadores ganador y perdedor
+                            winner = Player.objects.get(name=row[5])
+                            loser = Player.objects.get(name=row[6])
+
+                            # Crea los objetos Stats y guarda la relación con partido y jugadores.
+                            winner_stats = Stats(match_id=match, player_id=winner, winner=True)
+                            winner_stats.save()
+
+                            loser_stats = Stats(match_id=match, player_id=loser, winner=False)
+                            loser_stats.save()
+                            match.save()
                         elif files == 'stats':
-                            stats_rows.append(row)
+                            # for row in csvreader:
+                            match = Match.objects.get(id=int(row[0]))
+                            player = Player.objects.get(name=row[1])
+                            winner = bool(row[2])
 
-                    # print(header)
-                    # print(players_rows)
-                    # print(matches_rows)
-                    # print(stats_rows)
-
-            # return JsonResponse({'status': 'ok'})
-        # utilizando la instancia del modelo
+                            # Crea el objeto Stats y guarda la relación con el partido y el jugador
+                            stats = Stats(match_id=match, player_id=player, winner=winner)
+                            stats.save()
+            return JsonResponse({'status': 'ok'})
     else:
         form = LoaderForm()
     return render(request, 'loader/index.html', {'form': form})
