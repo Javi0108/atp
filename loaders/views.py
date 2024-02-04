@@ -44,14 +44,14 @@ def get_datos(request):
                             next(stats_file)
                             stats_csvreader = csv.reader(stats_file)
                             for stats_row in stats_csvreader:
+                                print('MATCH_ID: ', row[0])
                                 print('VALORES: \n', stats_row)
-                                if stats_row[2] == 'TRUE':
-                                    match.winner = Player.objects.get(player_id=stats_row[1])
-                                elif stats_row[2 == 'FALSE']:
-                                    match.loser = Player.objects.get(
-                                        player_id=stats_row[1]
-                                    )  # No va por culpa de la iteracion
-                                match.save()
+                                if stats_row[0] == row[0]:
+                                    if stats_row[2] == 'TRUE':
+                                        match.winner = Player.objects.get(player_id=stats_row[1])
+                                    elif stats_row[2] == 'FALSE':
+                                        match.loser = Player.objects.get(player_id=stats_row[1])
+                                        match.save()
 
                             stats_file.close()
 
